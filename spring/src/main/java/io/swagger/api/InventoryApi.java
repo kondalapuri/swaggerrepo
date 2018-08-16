@@ -6,7 +6,6 @@
 package io.swagger.api;
 
 import io.swagger.model.InventoryItem;
-import io.swagger.model.InventoryItemByLimit;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -38,13 +37,13 @@ public interface InventoryApi {
     ResponseEntity<Void> addInventory(@ApiParam(value = "Inventory item to add"  )  @Valid @RequestBody InventoryItem inventoryItem);
 
 
-    @ApiOperation(value = "searches inventory by limit", nickname = "searchInventoryByLimit", notes = "By passing in the appropriate options, you can search for available inventory in the system ", response = InventoryItemByLimit.class, responseContainer = "List", tags={ "limit", })
+    @ApiOperation(value = "searches inventory", nickname = "searchInventory", notes = "By passing in the appropriate options, you can search for available inventory in the system ", response = InventoryItem.class, responseContainer = "List", tags={ "developers", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "search results matching criteria", response = InventoryItemByLimit.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "search results matching criteria", response = InventoryItem.class, responseContainer = "List"),
         @ApiResponse(code = 400, message = "bad input parameter") })
     @RequestMapping(value = "/inventory",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<List<InventoryItemByLimit>> searchInventoryByLimit(@Min(0) @Max(50) @ApiParam(value = "maximum number of records to return") @Valid @RequestParam(value = "inv_limit", required = false) Integer invLimit);
+    ResponseEntity<List<InventoryItem>> searchInventory(@ApiParam(value = "pass an optional search string for looking up inventory") @Valid @RequestParam(value = "searchString", required = false) String searchString,@Min(0)@ApiParam(value = "number of records to skip for pagination") @Valid @RequestParam(value = "skip", required = false) Integer skip,@Min(0) @Max(50) @ApiParam(value = "maximum number of records to return") @Valid @RequestParam(value = "limit", required = false) Integer limit);
 
 }
