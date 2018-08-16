@@ -1,6 +1,7 @@
 package io.swagger.api;
 
 import io.swagger.model.InventoryItem;
+import io.swagger.model.InventoryItemByLimit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -41,18 +42,18 @@ public class InventoryApiController implements InventoryApi {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    public ResponseEntity<List<InventoryItem>> searchInventory(@ApiParam(value = "pass an optional search string for looking up inventory") @Valid @RequestParam(value = "searchString", required = false) String searchString,@Min(0)@ApiParam(value = "number of records to skip for pagination") @Valid @RequestParam(value = "skip", required = false) Integer skip,@Min(0) @Max(50) @ApiParam(value = "maximum number of records to return") @Valid @RequestParam(value = "limit", required = false) Integer limit) {
+    public ResponseEntity<List<InventoryItemByLimit>> searchInventoryByLimit(@Min(0) @Max(50) @ApiParam(value = "maximum number of records to return") @Valid @RequestParam(value = "inv_limit", required = false) Integer invLimit) {
         String accept = request.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                return new ResponseEntity<List<InventoryItem>>(objectMapper.readValue("[ {  \"releaseDate\" : \"2016-08-29T09:12:33.001Z\",  \"name\" : \"Widget Adapter\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"manufacturer\" : {    \"phone\" : \"408-867-5309\",    \"name\" : \"ACME Corporation\",    \"homePage\" : \"https://www.acme-corp.com\"  }}, {  \"releaseDate\" : \"2016-08-29T09:12:33.001Z\",  \"name\" : \"Widget Adapter\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\",  \"manufacturer\" : {    \"phone\" : \"408-867-5309\",    \"name\" : \"ACME Corporation\",    \"homePage\" : \"https://www.acme-corp.com\"  }} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
+                return new ResponseEntity<List<InventoryItemByLimit>>(objectMapper.readValue("[ {  \"releaseDate\" : \"2016-08-29T09:12:33.001Z\",  \"name\" : \"Widget Adapter\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\"}, {  \"releaseDate\" : \"2016-08-29T09:12:33.001Z\",  \"name\" : \"Widget Adapter\",  \"id\" : \"d290f1ee-6c54-4b01-90e6-d701748f0851\"} ]", List.class), HttpStatus.NOT_IMPLEMENTED);
             } catch (IOException e) {
                 log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<List<InventoryItem>>(HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<List<InventoryItemByLimit>>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }
 
-        return new ResponseEntity<List<InventoryItem>>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<InventoryItemByLimit>>(HttpStatus.NOT_IMPLEMENTED);
     }
 
 }
